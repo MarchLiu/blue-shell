@@ -45,7 +45,6 @@ def load_args():
         epilog='Powered By Python')
 
     parser.add_argument('--url', action="store", default="http://127.0.0.1:11434")  # positional argument
-    parser.add_argument('-c', '--config')  # option that takes a value
     parser.add_argument('-p', '--prompt',
                         action='store')  # string
     parser.add_argument("-m", "--model", action="store")

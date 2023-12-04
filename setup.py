@@ -6,7 +6,7 @@ from pathlib import Path
 this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
 
-setup(name="blue-shell",
+setup(name="blueshell",
       version="0.0.1",
       description="Blue Shell is a chat shell for local ai service endpoint",
       long_description=long_description,

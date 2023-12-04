@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=65.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "blueshell"
+version = "0.0.1"
+authors = [
+    { name = "Liu Xin", email = "mars.liu@outlook.com" },
+]
+description = "Blue Shell is a chat shell for local ai service endpoint"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = ["requests>=2.31.0", "prompt_toolkit>=3.0.41"]
+license = { file = "LICENSE" }
+
+[project.urls]
+Homepage = "https://github.com/MarchLiu/blue-shell"
+Issues = "https://github.com/MarchLiu/blue-shell/issues"
