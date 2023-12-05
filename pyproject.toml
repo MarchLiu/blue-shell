@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "blueshell"
-version = "0.0.1"
+version = "0.0.4"
 authors = [
     { name = "Liu Xin", email = "mars.liu@outlook.com" },
 ]
@@ -16,7 +16,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-dependencies = ["requests>=2.31.0", "prompt_toolkit>=3.0.41"]
+dependencies = ["requests>=2.31.0", "prompt_toolkit>=3.0.41", "rich>=13.7.0"]
 license = { file = "LICENSE" }
 
 [project.urls]

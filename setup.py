@@ -7,7 +7,7 @@ this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
 
 setup(name="blueshell",
-      version="0.0.1",
+      version="0.0.4",
       description="Blue Shell is a chat shell for local ai service endpoint",
       long_description=long_description,
       long_description_content_type='text/markdown',
@@ -22,7 +22,8 @@ setup(name="blueshell",
       },
       install_requires=[
           "prompt_toolkit",
-          "requests"
+          "requests",
+          "rich"
       ],
       classifiers=[
           "Topic :: Utilities",

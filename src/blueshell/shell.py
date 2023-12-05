@@ -1,12 +1,13 @@
 import argparse
+import atexit
 import os.path
-import sys
-from prompt_toolkit.key_binding import KeyBindings
-from prompt_toolkit import PromptSession
-from prompt_toolkit import prompt
+
 import readline
 import requests
-import atexit
+import rich.markdown
+from prompt_toolkit import PromptSession
+from rich.console import Console
+from rich.markdown import Markdown
 
 
 def ask(message, args, context=None):
@@ -60,12 +61,14 @@ def runner(args):
 
     while True:
         try:
-            line = session.prompt('ollama: ')
+            line = session.prompt(f'(ollama {args.model})# ')
 
             print(line)
             result = ask(line, args, context)
             context = result.get("context")
-            print(result.get("response"))
+            console = Console()
+            md = rich.markdown.Markdown(result.get("response"))
+            console.print(md)
         except EOFError:
             exit(0)
 

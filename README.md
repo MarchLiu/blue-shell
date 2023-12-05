@@ -5,7 +5,7 @@ Blue Shell is a AI Chat Shell for local service. 0.0.1 version support ollama
 ## Installation
 
 ```
-pip install blue-shell
+pip install blueshell
 ```
 
 ## Usage
@@ -30,6 +30,18 @@ python -m blueshell.shell --help
 
 ## What's New
 
-### 0.1.1
+### 0.0.1
 
 support ollama
+
+### 0.0.2
+
+document typo
+
+### 0.0.3
+
+print feedback as markdown
+
+### 0.0.4
+
+fixed dependencies miss
