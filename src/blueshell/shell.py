@@ -1,28 +1,35 @@
 import argparse
 import atexit
+import json
 import os.path
+import pprint
+import sys
 
 import readline
 import requests
 import rich.markdown
 from prompt_toolkit import PromptSession
 from rich.console import Console
-from rich.markdown import Markdown
 
 
 def ask(message, args, context=None):
     req = {
         "prompt": message,
-        "stream": False,
+        "stream": True,
         "system": args.system,
         "model": args.model
     }
     if context:
         req["context"] = context
-    gen_url = os.path.join(args.url, "api/generate")
-    resp = requests.post(url=gen_url, json=req, headers={"Content-Type": "application/json"})
-    return resp.json()
+    if args.format == "json":
+        req["format"] = "json"
 
+    gen_url = os.path.join(args.url, "api/generate")
+
+    with (requests.Session() as session,
+          session.post(gen_url, json=req, headers={"Content-Type": "application/json"}) as resp):
+        for token in resp.iter_lines():
+            yield json.loads(token)
 
 def save(prev_h_len, histfile):
     new_h_len = readline.get_current_history_length()
@@ -43,32 +50,70 @@ def load_args():
     parser = argparse.ArgumentParser(
         prog='Blue Shell',
         description='A AI assistant for local ai service',
-        epilog='Powered By Python')
+        epilog='Powered By Python, Rich, prompt_toolkit and requests')
 
     parser.add_argument('--url', action="store", default="http://127.0.0.1:11434")  # positional argument
     parser.add_argument('-p', '--prompt',
                         action='store')  # string
     parser.add_argument("-m", "--model", action="store")
+    parser.add_argument("-f", "--format", action="store",
+                        default="plain", choices=["markdown", "plain", "json"])
     parser.add_argument('-s', '--system',
                         action='store', default="You are a helpful assistant. 你是一个乐于助人的助手。")  # string
 
     return parser.parse_args()
 
 
+def output(response, args):
+    ty = type(response)
+    if ty is str:
+        content = response
+    elif (ty is tuple) or (ty is list):
+        content = "\n".join(response)
+    else:
+        content = str(response)
+
+    console = Console()
+    if args.format == "markdown":
+        md = rich.markdown.Markdown(content)
+        console.print(md)
+    elif args.format == "json":
+        try:
+            j = json.loads(content)
+        except Exception:
+            print(content)
+        else:
+            md = rich.markdown.Markdown('```json\n' + json.dumps(j, indent=2)+ '\n```')
+            console.print(md)
+    else:
+        print(content)
+
 def runner(args):
+
     context = None
     session = PromptSession()
 
     while True:
         try:
             line = session.prompt(f'(ollama {args.model})# ')
+            print()
+            content = ""
+            for j in ask(line, args, context):
+                if j["done"]:
+                    context = j["context"]
+                response = j.get("response")
+                if args.format == "plain":
+                    sys.stdout.write(response)
+                else:
+                    content += response
 
-            print(line)
-            result = ask(line, args, context)
-            context = result.get("context")
-            console = Console()
-            md = rich.markdown.Markdown(result.get("response"))
-            console.print(md)
+            if args.format == "plain":
+                print()
+            else:
+                output(content, args)
+
+        except KeyboardInterrupt:
+            print("Control-c")
         except EOFError:
             exit(0)
 
